@@ -3,26 +3,7 @@
 Terraform module that provisions a complete ECS Fargate environment for a containerised web application: the application service, a Redis cache service, an internet-facing Application Load Balancer, ECS Service Connect for internal service discovery, EFS-backed persistent media storage, and SSM Parameter Store-sourced secrets. All resources (IAM roles, security groups, log groups, target groups, task definitions, services) are defined in a single Terraform root module.
 
 ## Architecture
-
-```
-Client
-   |
-   | HTTP :80
-   v
-Application Load Balancer (internet-facing)
-   |
-   | IP-mode target group :8000
-   v
-Backend service (Fargate, 512 CPU / 1024 MB)         <--- pulls image from ECR
-   |                                                       reads secrets from SSM
-   |  Service Connect: redis://redis:6379                  reads/writes to EFS at /app/media
-   v
-Redis cache service (Fargate, 256 CPU / 512 MB, Redis 7)
-
-Both services use FARGATE platform version 1.4.0
-Both publish themselves to a Service Connect namespace
-Logs go to per-container CloudWatch log groups (14-day retention)
-```
+![Architecture Diagram](./architecture.png)
 
 ## What It Provisions
 
